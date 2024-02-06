@@ -18,9 +18,10 @@ class Kernel {
 
   public function registerRoutes(): Dispatcher {
     return simpleDispatcher(function(RouteCollector $collector) {
-      $collector->get('/', function() {
-        return new Response('Hello World with fastroute!');
-      });
+      $routes = require(APP_PATH . 'config/routes.php');
+      foreach($routes as $route) {
+        $collector->addRoute(...$route);
+      }
     });
   }
 }
