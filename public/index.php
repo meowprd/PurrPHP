@@ -1,4 +1,8 @@
 <?php
-
 define("APP_PATH", dirname(__DIR__));
 require_once(APP_PATH . '/vendor/autoload.php');
+
+use PurrPHP\Http\Kernel;
+use PurrPHP\Http\Request;
+
+(new Kernel())->handle(Request::createFromGlobals())->send();
