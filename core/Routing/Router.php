@@ -19,8 +19,13 @@ class Router implements RouterInterface {
     
     switch($routeInfo[0]) {
       case Dispatcher::FOUND: 
-        [$status, [$controller, $method], $vars] = $routeInfo;
-        return array(array(new $controller(), $method), $vars);
+        [$status, $handler, $vars] = $routeInfo;
+        if(is_array($handler)) {
+          [$controller, $method] = $handler;
+          return array(array(new $controller(), $method), $vars);
+        } else {
+          return array($handler, $vars);
+        }
       case Dispatcher::METHOD_NOT_ALLOWED: throw new MethodNotAllowedException("{$request->method()} method not allowed");
       default: throw new RouteNotFoundException("Route {$request->method()} {$request->uri()} not found");
     }
