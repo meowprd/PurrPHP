@@ -7,7 +7,7 @@ use PurrPHP\App\Controllers\HomeController;
 
 return array(
   Route::get('/', array(HomeController::class, 'index')),
-  Route::get('/test', function() {
+  Route::post('/test', function() {
     return new Response('Test route');
   })
 );
