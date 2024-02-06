@@ -12,13 +12,13 @@ class Kernel {
 
   public function handle(Request $request): Response {
     $dispatcher = $this->registerRoutes();
-    [$status, $handler, $vars] = $dispatcher->dispatch($request->method(), $request->uri());
-    return $handler($vars);
+    [$status, [$controller, $method], $vars] = $dispatcher->dispatch($request->method(), $request->uri());
+    return call_user_func_array([$controller, $method], $vars);
   }
 
   public function registerRoutes(): Dispatcher {
     return simpleDispatcher(function(RouteCollector $collector) {
-      $routes = require(APP_PATH . 'config/routes.php');
+      $routes = require(APP_PATH . '/config/routes.php');
       foreach($routes as $route) {
         $collector->addRoute(...$route);
       }
