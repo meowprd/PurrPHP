@@ -15,4 +15,12 @@ class Request {
   public static function createFromGlobals(): static {
     return new static($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER);
   }
+
+  public function method(): string {
+    return $this->server['REQUEST_METHOD'];
+  }
+
+  public function uri(): string {
+    return strtok($this->server['REQUEST_URI'], '?');
+  }
 }
