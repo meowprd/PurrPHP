@@ -8,15 +8,22 @@ use FastRoute\RouteCollector;
 use FastRoute\Dispatcher;
 use function FastRoute\simpleDispatcher;
 
+use PurrPHP\Exceptions\MethodNotAllowedException;
+use PurrPHP\Exceptions\RouteNotFoundException;
+
 class Router implements RouterInterface {
 
   public function dispatch(Request $request): array {
     $dispatcher = $this->registerRoutes();
-    [$status, [$controller, $method], $vars] = $dispatcher->dispatch($request->method(), $request->uri());
-    return array(
-      array(new $controller(), $method),
-      $vars
-    );
+    $routeInfo = $dispatcher->dispatch($request->method(), $request->uri());
+    
+    switch($routeInfo[0]) {
+      case Dispatcher::FOUND: 
+        [$status, [$controller, $method], $vars] = $routeInfo;
+        return array(array(new $controller(), $method), $vars);
+      case Dispatcher::METHOD_NOT_ALLOWED: throw new MethodNotAllowedException("{$request->method()} method not allowed");
+      default: throw new RouteNotFoundException("Route {$request->method()} {$request->uri()} not found");
+    }
   }
 
   private function registerRoutes(): Dispatcher {
