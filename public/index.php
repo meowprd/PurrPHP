@@ -4,5 +4,7 @@ require_once(APP_PATH . '/vendor/autoload.php');
 
 use PurrPHP\Http\Kernel;
 use PurrPHP\Http\Request;
+use PurrPHP\Routing\Router;
 
-(new Kernel())->handle(Request::createFromGlobals())->send();
+$router = new Router();
+(new Kernel($router))->handle(Request::createFromGlobals())->send();
