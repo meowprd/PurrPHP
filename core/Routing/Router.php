@@ -2,6 +2,7 @@
 
 namespace PurrPHP\Routing;
 
+use League\Container\Container;
 use PurrPHP\Http\Request;
 
 use FastRoute\RouteCollector;
@@ -15,7 +16,7 @@ class Router implements RouterInterface {
 
   private array $routes = array();
 
-  public function dispatch(Request $request): array {
+  public function dispatch(Request $request, Container $container): array {
     $dispatcher = $this->registerRoutes();
     $routeInfo = $dispatcher->dispatch($request->method(), $request->uri());
     
@@ -24,7 +25,8 @@ class Router implements RouterInterface {
         [$status, $handler, $vars] = $routeInfo;
         if(is_array($handler)) {
           [$controller, $method] = $handler;
-          return array(array(new $controller(), $method), $vars);
+          $controller = $container->get($controller);
+          return array(array($controller, $method), $vars);
         } else {
           return array($handler, $vars);
         }
@@ -35,7 +37,6 @@ class Router implements RouterInterface {
 
   public function setRoutesPath(string $path): void {
     $this->routes = include($path);
-    dd($path, $this->routes);
   }
 
   private function registerRoutes(): Dispatcher {
