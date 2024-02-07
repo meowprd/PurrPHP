@@ -4,7 +4,9 @@ require_once(APP_PATH . '/vendor/autoload.php');
 
 use PurrPHP\Http\Kernel;
 use PurrPHP\Http\Request;
-use PurrPHP\Routing\Router;
 
-$router = new Router();
-(new Kernel($router))->handle(Request::createFromGlobals())->send();
+/** @var \League\Container\Container $container */
+$container = require(APP_PATH . '/config/services.php');
+
+$kernel = $container->get(Kernel::class);
+$kernel->handle(Request::createFromGlobals())->send();
