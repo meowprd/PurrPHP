@@ -6,6 +6,7 @@ use PurrPHP\Routing\Router;
 use PurrPHP\Http\Kernel;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use PurrPHP\Controller\AbstractController;
 
 /* ----------------------------- Init container ----------------------------- */
 use League\Container\Container;
@@ -30,8 +31,11 @@ $container->add(Kernel::class)
 $container->addShared('twig-loader', FilesystemLoader::class)
   ->addArgument(new StringArgument(VIEWS_PATH));
 
-$container->addShared(Environment::class)
+$container->addShared('twig', Environment::class)
   ->addArgument('twig-loader');
 
+// Init abstact controller
+$container->inflector(AbstractController::class)
+  ->invokeMethod('setContainer', array($container));
 /* ---------------------------- Return container ---------------------------- */
 return $container;
