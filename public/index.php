@@ -1,5 +1,5 @@
 <?php
-define("APP_PATH", dirname(__DIR__));
+require_once(dirname(__DIR__) . '/config/app.php');
 require_once(APP_PATH . '/vendor/autoload.php');
 
 use PurrPHP\Http\Kernel;

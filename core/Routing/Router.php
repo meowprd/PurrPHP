@@ -13,6 +13,8 @@ use PurrPHP\Exceptions\RouteNotFoundException;
 
 class Router implements RouterInterface {
 
+  private array $routes = array();
+
   public function dispatch(Request $request): array {
     $dispatcher = $this->registerRoutes();
     $routeInfo = $dispatcher->dispatch($request->method(), $request->uri());
@@ -31,10 +33,14 @@ class Router implements RouterInterface {
     }
   }
 
+  public function setRoutesPath(string $path): void {
+    $this->routes = include($path);
+    dd($path, $this->routes);
+  }
+
   private function registerRoutes(): Dispatcher {
     return simpleDispatcher(function(RouteCollector $collector) {
-      $routes = require(APP_PATH . '/config/routes.php');
-      foreach($routes as $route) {
+      foreach($this->routes as $route) {
         $collector->addRoute(...$route);
       }
     });
