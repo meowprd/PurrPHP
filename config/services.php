@@ -4,6 +4,8 @@
 use PurrPHP\Routing\RouterInterface;
 use PurrPHP\Routing\Router;
 use PurrPHP\Http\Kernel;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
 
 /* ----------------------------- Init container ----------------------------- */
 use League\Container\Container;
@@ -23,6 +25,13 @@ $container->extend(RouterInterface::class)
 $container->add(Kernel::class)
   ->addArgument(RouterInterface::class)
   ->addArgument($container);
+
+// Init twig
+$container->addShared('twig-loader', FilesystemLoader::class)
+  ->addArgument(new StringArgument(VIEWS_PATH));
+
+$container->addShared(Environment::class)
+  ->addArgument('twig-loader');
 
 /* ---------------------------- Return container ---------------------------- */
 return $container;

@@ -7,6 +7,7 @@ define("DEBUG", TRUE); // required filp/whoops package
 // base dirs
 define("APP_PATH", dirname(__DIR__));
 define("CONFIG_PATH", APP_PATH . '/config');
+define("VIEWS_PATH", APP_PATH . '/app/views');
 
 // files paths
 define("ROUTES_PATH", CONFIG_PATH . '/routes.php');
