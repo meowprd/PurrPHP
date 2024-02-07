@@ -3,6 +3,8 @@
 namespace PurrPHP\Controller;
 
 use League\Container\Container;
+use Twig\Environment;
+use PurrPHP\Http\Response;
 
 abstract class AbstractController {
 
@@ -10,5 +12,10 @@ abstract class AbstractController {
 
   public function setContainer(Container $container): void {
     $this->container = $container;
+  }
+
+  public function render(string $view, array $data = array(), Response $response = null): Response {
+    $response ??= new Response();
+    return $response->setContent($this->container->get('twig')->render($view, $data));
   }
 }

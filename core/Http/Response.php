@@ -5,7 +5,7 @@ namespace PurrPHP\Http;
 class Response {
 
   public function __construct(
-    private mixed $content,
+    private string $content = '',
     private int $status = 200,
     private array $headers = array()
   ) {}
@@ -16,5 +16,10 @@ class Response {
       header($key . ': ' . $value);
     }
     echo $this->content;
+  }
+
+  public function setContent(string $content): Response {
+    $this->content = $content;
+    return $this;    
   }
 }
