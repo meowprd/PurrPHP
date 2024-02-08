@@ -11,3 +11,6 @@ define("VIEWS_PATH", APP_PATH . '/app/Views');
 
 // files paths
 define("ROUTES_PATH", CONFIG_PATH . '/routes.php');
+
+// CLI commands namespace
+define("COMMANDS_NAMESPACE", 'PurrPHP\\Console\\Commands\\'); // system commands

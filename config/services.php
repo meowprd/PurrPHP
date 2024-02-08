@@ -4,6 +4,7 @@
 use PurrPHP\Routing\RouterInterface;
 use PurrPHP\Routing\Router;
 use PurrPHP\Http\Kernel;
+use PurrPHP\Console\Kernel as ConsoleKernel;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use PurrPHP\Controller\AbstractController;
@@ -50,5 +51,10 @@ $container->add(DatabaseFactory::class)
 $container->addShared(Connection::class, function() use ($container): Connection {
   return $container->get(DatabaseFactory::class)->create();
 });
+
+// Init console
+$container->add(ConsoleKernel::class)
+  ->addArgument($container);
+  
 /* ---------------------------- Return container ---------------------------- */
 return $container;
