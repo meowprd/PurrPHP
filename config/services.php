@@ -4,12 +4,16 @@
 use PurrPHP\Routing\RouterInterface;
 use PurrPHP\Routing\Router;
 use PurrPHP\Http\Kernel;
-use PurrPHP\Console\Kernel as ConsoleKernel;
+
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use PurrPHP\Controller\AbstractController;
+
 use PurrPHP\Database\DatabaseFactory;
 use Doctrine\DBAL\Connection;
+
+use PurrPHP\Console\Kernel as ConsoleKernel;
+use PurrPHP\Console\Application;
 
 /* ----------------------------- Init container ----------------------------- */
 use League\Container\Container;
@@ -53,8 +57,12 @@ $container->addShared(Connection::class, function() use ($container): Connection
 });
 
 // Init console
-$container->add(ConsoleKernel::class)
+$container->add(Application::class)
   ->addArgument($container);
-  
+
+$container->add(ConsoleKernel::class)
+  ->addArgument($container)
+  ->addArgument(Application::class);
+
 /* ---------------------------- Return container ---------------------------- */
 return $container;
