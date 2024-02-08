@@ -15,6 +15,8 @@ use Doctrine\DBAL\Connection;
 use PurrPHP\Console\Kernel as ConsoleKernel;
 use PurrPHP\Console\Application;
 
+use PurrPHP\Console\Commands\DatabaseMigrateCommand;
+
 /* ----------------------------- Init container ----------------------------- */
 use League\Container\Container;
 use League\Container\ReflectionContainer;
@@ -63,6 +65,10 @@ $container->add(Application::class)
 $container->add(ConsoleKernel::class)
   ->addArgument($container)
   ->addArgument(Application::class);
+
+// Init console commands
+$container->add('db:migrate', DatabaseMigrateCommand::class)
+  ->addArgument(Connection::class);
 
 /* ---------------------------- Return container ---------------------------- */
 return $container;
