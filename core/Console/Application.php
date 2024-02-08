@@ -16,11 +16,10 @@ class Application {
 
     try {
       $command = $this->container->get($cmd);
-      //$command->execute($this->parseParams(array_slice($argv, 2)));
+      $command->execute($this->parseParams(array_slice($argv, 2)));
     } catch(\Exception $e) {
       throw new ConsoleException($e->getMessage());
     }
-    $command->execute($this->parseParams(array_slice($argv, 2)));
     echo(ConsoleColors::RESET);
     return 0;
   }

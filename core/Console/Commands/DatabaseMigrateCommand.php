@@ -22,31 +22,29 @@ class DatabaseMigrateCommand implements CommandInterface {
   public function execute(array $params = array()): int {
     echo(ConsoleColors::LIGHT_CYAN . 'Running ' . $this->command . PHP_EOL);
 
-    try {
-      $this->createMigrationsTable();
-      $appliedMigrations = $this->getMigrationsList();
-      $migrationsFiles = $this->getMigrationFiles();
-      $newMigrations = array_values(array_diff($migrationsFiles, $appliedMigrations));
+    $this->createMigrationsTable();
+    $appliedMigrations = $this->getMigrationsList();
+    $migrationsFiles = $this->getMigrationFiles();
+    $newMigrations = array_values(array_diff($migrationsFiles, $appliedMigrations));
 
-      $schema = new Schema();
-      foreach($newMigrations as $migration) {
+    foreach($newMigrations as $migration) {
+      $this->connection->beginTransaction();
+      try {
+        $schema = new Schema();
         echo(ConsoleColors::LIGHT_CYAN . "Preparing {$migration}..." . PHP_EOL);
         $migrationInstance = require MIGRATIONS_PATH . "/{$migration}";
         $migrationInstance->up($schema);
-        $this->addMigrationToTable($migration);
         echo(ConsoleColors::LIGHT_YELLOW . "Prepared {$migration}" . PHP_EOL);
+        $sqlArray = $schema->toSql($this->connection->getDatabasePlatform());
+        echo(ConsoleColors::LIGHT_CYAN . "Applying migrations {$migration}..." . PHP_EOL);
+        $this->connection->executeQuery($sqlArray[0]);
+        echo(ConsoleColors::LIGHT_GREEN . 'Done!' . PHP_EOL);
+        $this->addMigrationToTable($migration);
+      } catch(\Throwable $e) {
+        echo(ConsoleColors::LIGHT_RED . 'Error while applying migration!' . PHP_EOL);
+        $this->connection->rollBack();
+        throw $e;
       }
-      $sqlArray = $schema->toSql($this->connection->getDatabasePlatform());
-
-      echo(ConsoleColors::LIGHT_CYAN . 'Applying migrations...' . PHP_EOL);
-      foreach($sqlArray as $sql) { 
-        $this->connection->executeQuery($sql); 
-      }
-      echo(ConsoleColors::LIGHT_GREEN . 'Done!' . PHP_EOL);
-    } catch (\Throwable $e) {
-      echo(ConsoleColors::LIGHT_RED . 'Error!' . PHP_EOL);
-      $this->connection->rollBack();
-      throw $e;
     }
     return 0;
   }

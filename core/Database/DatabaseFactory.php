@@ -11,8 +11,6 @@ class DatabaseFactory {
   ) {}
 
   public function create(): Connection {
-    $connection = DriverManager::getConnection($this->databaseConfig);
-    $connection->setAutoCommit(false);
-    return $connection;
+    return DriverManager::getConnection($this->databaseConfig);
   }
 }
