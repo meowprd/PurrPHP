@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+require_once(dirname(__FILE__) . '/config/app.php');
+require_once(APP_PATH . '/vendor/autoload.php');
+
+use PurrPHP\Console\Kernel;
+
+/** @var \League\Container\Container $container */
+$container = require(CONFIG_PATH . '/services.php');
+
+$status = $container->get(Kernel::class)->handle();
+exit($status);
