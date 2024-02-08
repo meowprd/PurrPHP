@@ -2,6 +2,7 @@
 
 namespace PurrPHP\App\Controllers;
 
+use Doctrine\DBAL\Connection;
 use PurrPHP\Controller\AbstractController;
 use PurrPHP\App\Services\CurrentFrameworkService;
 
