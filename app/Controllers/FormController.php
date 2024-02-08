@@ -14,6 +14,6 @@ class FormController extends AbstractController {
   }
 
   public function post() {
-    dd($_POST);
+    dd($this->request->input('text'));
   }
 }

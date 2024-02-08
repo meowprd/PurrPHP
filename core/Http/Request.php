@@ -23,4 +23,9 @@ class Request {
   public function uri(): string {
     return strtok($this->server['REQUEST_URI'], '?');
   }
+
+  public function input(string $key, $default = null): mixed {
+    return $this->get[$key] ?? $this->post[$key] ?? $default;
+  }
+
 }

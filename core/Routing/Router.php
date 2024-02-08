@@ -12,6 +12,8 @@ use function FastRoute\simpleDispatcher;
 use PurrPHP\Exceptions\MethodNotAllowedException;
 use PurrPHP\Exceptions\RouteNotFoundException;
 
+use PurrPHP\Controller\AbstractController;
+
 class Router implements RouterInterface {
 
   private array $routes = array();
@@ -26,6 +28,7 @@ class Router implements RouterInterface {
         if(is_array($handler)) {
           [$controller, $method] = $handler;
           $controller = $container->get($controller);
+          if(is_subclass_of($controller, AbstractController::class)) { $controller->setRequest($request); }
           return array(array($controller, $method), $vars);
         } else {
           return array($handler, $vars);
