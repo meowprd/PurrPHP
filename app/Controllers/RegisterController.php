@@ -5,6 +5,7 @@ use PurrPHP\Controller\AbstractController;
 
 use PurrPHP\App\Entities\User;
 use PurrPHP\App\Services\UserService;
+use PurrPHP\Http\RedirectResponse;
 
 class RegisterController extends AbstractController {
 
@@ -17,8 +18,7 @@ class RegisterController extends AbstractController {
   }
 
   public function post() {
-    dd($this->service->getAll());
+    return new RedirectResponse('/login');
     $user = User::create($this->request->input('name'));
-    dd($this->service->save($user));
   }
 }
