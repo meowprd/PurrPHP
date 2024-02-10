@@ -35,4 +35,13 @@ class UserService {
     if(!$user) { return null; }
     return User::create($user['name'], $user['id'], new \DateTimeImmutable($user['created_at']));
   }
+
+  public function getAll(): array {
+    $users = $this->connection->createQueryBuilder()
+      ->select('*')
+      ->from('users')
+      ->executeQuery()
+      ->fetchAllAssociative();
+    return array_map(fn($user) => User::create($user['name'], $user['id'], new \DateTimeImmutable($user['created_at'])), $users);
+  }
 }

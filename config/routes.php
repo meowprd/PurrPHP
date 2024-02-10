@@ -15,4 +15,6 @@ return array(
 
   Route::get('/login', array(LoginController::class, 'index')),
   Route::post('/login', array(LoginController::class, 'post')),
+
+  Route::get('/users/list', array(HomeController::class, 'usersList'))
 );

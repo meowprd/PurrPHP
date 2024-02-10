@@ -17,7 +17,7 @@ class RegisterController extends AbstractController {
   }
 
   public function post() {
-    dd($this->service->getById(1));
+    dd($this->service->getAll());
     $user = User::create($this->request->input('name'));
     dd($this->service->save($user));
   }
