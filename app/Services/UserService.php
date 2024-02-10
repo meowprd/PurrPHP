@@ -2,29 +2,29 @@
 
 namespace PurrPHP\App\Services;
 
-use Doctrine\DBAL\Connection;
 use PurrPHP\App\Entities\User;
+use PurrPHP\Entity\EntityService;
 
 class UserService {
 
   public function __construct(
-    private Connection $connection
+    private EntityService $service
   ) {}
 
   public function save(User $user): User {
-    $queryBuilder = $this->connection->createQueryBuilder();
+    $queryBuilder = $this->service->connection()->createQueryBuilder();
     $queryBuilder
       ->insert('users')
       ->values(array('name' => ':name', 'created_at' => ':created_at'))
       ->setParameter('name', $user->name())
       ->setParameter('created_at', $user->createdAt()->format('Y-m-d H:i:s'))
       ->executeQuery();
-    $user->setId($this->connection->lastInsertId());
+    $user->setId($this->service->save($user));
     return $user;
   }
 
   public function getById(int $id): ?User {
-    $user = $this->connection->createQueryBuilder()
+    $user = $this->service->connection()->createQueryBuilder()
       ->select('*')
       ->from('users')
       ->where('id = :id')
@@ -37,7 +37,7 @@ class UserService {
   }
 
   public function getAll(): array {
-    $users = $this->connection->createQueryBuilder()
+    $users = $this->service->connection()->createQueryBuilder()
       ->select('*')
       ->from('users')
       ->executeQuery()

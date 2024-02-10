@@ -3,7 +3,9 @@
 namespace PurrPHP\Http;
 
 use PurrPHP\Http\Response;
-use PurrPHP\Routing\RouterInterface;
+
+use PurrPHP\Event\EventDispatcher;
+use PurrPHP\Event\ResponseEvent;
 
 use League\Container\Container;
 
@@ -18,17 +20,20 @@ use PurrPHP\Exceptions\MethodNotAllowedException;
 class Kernel {
 
   public function __construct(
-    private RouterInterface $router,
-    private Container $container,
-    private RequestHandlerInterface $requestHandler
+    private readonly Container $container,
+    private readonly RequestHandlerInterface $requestHandler,
+    private readonly EventDispatcher $eventDispatcher
   ) { $this->registerWhoops(); }
 
   public function handle(Request $request): Response {
     try {
-      return $this->requestHandler->handle($request);
+      $response = $this->requestHandler->handle($request);
     } catch(\Exception $e) {
-      return $this->resolveException($e);
+      $response = $this->resolveException($e);
     }
+
+    $this->eventDispatcher->dispatch(new ResponseEvent($request, $response));
+    return $response;
   }
 
   public function terminate(Request $request, Response $response) {

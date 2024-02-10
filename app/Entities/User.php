@@ -2,7 +2,9 @@
 
 namespace PurrPHP\App\Entities;
 
-class User {
+use PurrPHP\Entity\AbstractEntity;
+
+class User extends AbstractEntity {
 
   public function __construct(
     private ?int $id,

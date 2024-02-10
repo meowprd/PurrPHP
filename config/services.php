@@ -4,27 +4,37 @@
 use PurrPHP\Routing\RouterInterface;
 use PurrPHP\Routing\Router;
 
+// middlewares
 use PurrPHP\Middleware\RequestHandlerInterface;
 use PurrPHP\Middleware\RequestHandler;
 use PurrPHP\Middleware\RouteMiddlewares;
 use PurrPHP\Middleware\Handlers\RouterDispatch;
 
+// events
+use PurrPHP\Event\EventDispatcher;
+
+// http kernel
 use PurrPHP\Http\Kernel;
 
+// sessions
 use PurrPHP\Session\SessionInterface;
 use PurrPHP\Session\Session;
 
+// twig
 use Twig\Environment;
 use PurrPHP\Template\TwigFactory;
 
+// validator
 use Rakit\Validation\Validator;
 
+// controllers
 use PurrPHP\Controller\AbstractController;
 
+// database
 use PurrPHP\Database\DatabaseFactory;
 use Doctrine\DBAL\Connection;
 
-
+// CLI
 use PurrPHP\Console\Kernel as ConsoleKernel;
 use PurrPHP\Console\Application;
 use PurrPHP\Console\Commands\DatabaseMigrateCommand;
@@ -56,11 +66,14 @@ $container->add(RouterDispatch::class)
 $container->add(RouteMiddlewares::class)
   ->addArgument(new StringArgument(ROUTES_PATH));
 
+// Init Events
+$container->addShared(EventDispatcher::class);
+
 // Init Kernel
 $container->add(Kernel::class)
-  ->addArgument(RouterInterface::class)
   ->addArgument($container)
-  ->addArgument(RequestHandlerInterface::class);
+  ->addArgument(RequestHandlerInterface::class)
+  ->addArgument(EventDispatcher::class);
 
 // Init sessions
 $container->addShared(SessionInterface::class, Session::class);

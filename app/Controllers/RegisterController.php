@@ -5,6 +5,7 @@ use PurrPHP\Controller\AbstractController;
 
 use PurrPHP\App\Entities\User;
 use PurrPHP\App\Services\UserService;
+use PurrPHP\Http\Response;
 use PurrPHP\Http\RedirectResponse;
 use Rakit\Validation\Validator;
 
@@ -25,15 +26,17 @@ class RegisterController extends AbstractController {
       'name' => 'required|min:5',
     ));
     
-    $validation->validate();
-    if($validation->fails()) {
+    /* $validation->validate();
+    //if($validation->fails()) {
       // dd($validation->errors()->all());
       dd($validation->errors()->toArray());
     } else {
       dd("Validation succ!");
     }
-    exit();
+    exit(); */
     //return new RedirectResponse('/login');
-    //$user = User::create($this->request->input('name'));
+    $user = User::create($this->request->input('name'));
+    $this->service->save($user);
+    return new Response('succ');
   }
 }
