@@ -2,6 +2,7 @@
 
 namespace PurrPHP\App\Controllers;
 
+use PurrPHP\App\Entities\User;
 use PurrPHP\Controller\AbstractController;
 
 class RegisterController extends AbstractController {
@@ -13,6 +14,6 @@ class RegisterController extends AbstractController {
   }
 
   public function post() {
-    dd($this->request->input('name'));
+    $user = User::create($this->request->input('name'));
   }
 }
