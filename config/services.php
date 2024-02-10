@@ -3,21 +3,26 @@
 /* ------------------------------ Used services ----------------------------- */
 use PurrPHP\Routing\RouterInterface;
 use PurrPHP\Routing\Router;
+
+use PurrPHP\Middleware\RequestHandlerInterface;
+use PurrPHP\Middleware\RequestHandler;
+use PurrPHP\Middleware\Handlers\RouterDispatch;
+
 use PurrPHP\Http\Kernel;
+
+use PurrPHP\Session\SessionInterface;
+use PurrPHP\Session\Session;
 
 use Twig\Environment;
 use PurrPHP\Template\TwigFactory;
 
 use PurrPHP\Controller\AbstractController;
-use PurrPHP\Session\SessionInterface;
-use PurrPHP\Session\Session;
 
 use PurrPHP\Database\DatabaseFactory;
 use Doctrine\DBAL\Connection;
 
 use PurrPHP\Console\Kernel as ConsoleKernel;
 use PurrPHP\Console\Application;
-
 use PurrPHP\Console\Commands\DatabaseMigrateCommand;
 
 /* ----------------------------- Init container ----------------------------- */
@@ -37,10 +42,19 @@ $container->add(RouterInterface::class, Router::class);
 $container->extend(RouterInterface::class)
   ->addMethodCall('setRoutesPath', array(new StringArgument(ROUTES_PATH)));
 
+// Init Middlewares
+$container->add(RequestHandlerInterface::class, RequestHandler::class)
+  ->addArgument($container);
+
+$container->add(RouterDispatch::class)
+  ->addArgument(RouterInterface::class)
+  ->addArgument($container);
+
 // Init Kernel
 $container->add(Kernel::class)
   ->addArgument(RouterInterface::class)
-  ->addArgument($container);
+  ->addArgument($container)
+  ->addArgument(RequestHandlerInterface::class);
 
 // Init sessions
 $container->addShared(SessionInterface::class, Session::class);

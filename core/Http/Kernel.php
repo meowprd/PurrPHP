@@ -4,9 +4,13 @@ namespace PurrPHP\Http;
 
 use PurrPHP\Http\Response;
 use PurrPHP\Routing\RouterInterface;
+
 use League\Container\Container;
+
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
+
+use PurrPHP\Middleware\RequestHandlerInterface;
 
 use PurrPHP\Exceptions\RouteNotFoundException;
 use PurrPHP\Exceptions\MethodNotAllowedException;
@@ -15,13 +19,13 @@ class Kernel {
 
   public function __construct(
     private RouterInterface $router,
-    private Container $container
+    private Container $container,
+    private RequestHandlerInterface $requestHandler
   ) { $this->registerWhoops(); }
 
   public function handle(Request $request): Response {
     try {
-      [$handler, $vars] = $this->router->dispatch($request, $this->container);
-      return call_user_func_array($handler, $vars);
+      return $this->requestHandler->handle($request);
     } catch(\Exception $e) {
       return $this->resolveException($e);
     }
