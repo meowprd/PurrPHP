@@ -22,4 +22,17 @@ class UserService {
     $user->setId($this->connection->lastInsertId());
     return $user;
   }
+
+  public function getById(int $id): ?User {
+    $user = $this->connection->createQueryBuilder()
+      ->select('*')
+      ->from('users')
+      ->where('id = :id')
+      ->setParameter('id', $id)
+      ->executeQuery()
+      ->fetchAssociative();
+    
+    if(!$user) { return null; }
+    return User::create($user['name'], $user['id'], new \DateTimeImmutable($user['created_at']));
+  }
 }
