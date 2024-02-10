@@ -16,8 +16,6 @@ class User {
 
   public function id() { return $this->id; }
   public function setId(int $id) { $this->id = $id; return $this; }
-
   public function name() { return $this->name; }
-
   public function createdAt() { return $this->createdAt; }
 }

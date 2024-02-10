@@ -16,10 +16,13 @@ use PurrPHP\Session\Session;
 use Twig\Environment;
 use PurrPHP\Template\TwigFactory;
 
+use Rakit\Validation\Validator;
+
 use PurrPHP\Controller\AbstractController;
 
 use PurrPHP\Database\DatabaseFactory;
 use Doctrine\DBAL\Connection;
+
 
 use PurrPHP\Console\Kernel as ConsoleKernel;
 use PurrPHP\Console\Application;
@@ -67,9 +70,16 @@ $container->addShared('twig', function() use ($container): Environment {
   return $container->get('twig-factory')->create();
 });
 
+// Init validator
+// docs: https://github.com/rakit/validation
+$container->addShared(Validator::class)
+  ->addArgument(new ArrayArgument(array())); // custom messages 
+
+
 // Init abstact controller
 $container->inflector(AbstractController::class)
-  ->invokeMethod('setContainer', array($container));
+  ->invokeMethod('setContainer', array($container))
+  ->invokeMethod('setValidator', array($container->get(Validator::class)));
 
 // Init database
 $container->add(DatabaseFactory::class)
