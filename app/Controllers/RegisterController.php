@@ -3,17 +3,16 @@
 namespace PurrPHP\App\Controllers;
 
 use PurrPHP\Controller\AbstractController;
-use PurrPHP\Http\Request;
 
-class FormController extends AbstractController {
+class RegisterController extends AbstractController {
 
   public function __construct() {}
 
   public function index() {
-    return $this->render('form.html.twig');
+    return $this->render('register.html.twig');
   }
 
   public function post() {
-    dd($this->request->input('text'));
+    dd($this->request->input('name'));
   }
 }
