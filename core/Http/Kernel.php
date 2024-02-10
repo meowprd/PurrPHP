@@ -31,6 +31,10 @@ class Kernel {
     }
   }
 
+  public function terminate(Request $request, Response $response) {
+    $request->session()?->removeFlash();
+  }
+
   private function resolveException(\Exception $e): Response {
     if(DEBUG) { throw $e; }
     

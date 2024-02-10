@@ -9,4 +9,7 @@ use PurrPHP\Http\Request;
 $container = require(CONFIG_PATH . '/services.php');
 
 $kernel = $container->get(Kernel::class);
-$kernel->handle(Request::createFromGlobals())->send();
+$request = Request::createFromGlobals();
+$response = $kernel->handle($request);
+$response->send();
+$kernel->terminate($request, $response);

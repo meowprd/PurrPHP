@@ -4,6 +4,7 @@ namespace PurrPHP\Session;
 
 interface SessionInterface {
 
+  public function start(): void;
   public function set(string $key, $value): void;
   public function setFlash(string $type, string $message): void;
   public function get(string $key, $default = null);

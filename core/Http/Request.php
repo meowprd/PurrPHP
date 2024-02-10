@@ -1,8 +1,11 @@
 <?php
 
 namespace PurrPHP\Http;
+use PurrPHP\Session\SessionInterface;
 
 class Request {
+
+  private SessionInterface $session;
 
   public function __construct(
     private readonly array $get,
@@ -28,4 +31,7 @@ class Request {
     return $this->get[$key] ?? $this->post[$key] ?? $default;
   }
 
+  public function session() { return $this->session; }
+
+  public function setSession($session) { $this->session = $session; return $this; }
 }

@@ -7,10 +7,12 @@ use PurrPHP\Http\Request;
 use PurrPHP\Http\Response;
 
 use PurrPHP\Middleware\Handlers\RouterDispatch;
+use PurrPHP\Middleware\Handlers\StartSession;
 
 class RequestHandler implements RequestHandlerInterface {
 
   private array $middleware = array(
+    StartSession::class,
     RouterDispatch::class
   );
 

@@ -7,8 +7,8 @@ namespace PurrPHP\Session;
 class Session implements SessionInterface {
 
   private const FLASH_MESSAGES_KEY = 'flash_messages';
-
-  public function __construct() { session_start(); }
+  
+  public function start(): void { session_start(); }
 
   public function set(string $key, $value): void {
     $_SESSION[$key] = $value;
