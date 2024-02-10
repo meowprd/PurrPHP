@@ -5,9 +5,12 @@ use PurrPHP\Routing\RouterInterface;
 use PurrPHP\Routing\Router;
 use PurrPHP\Http\Kernel;
 
-use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use PurrPHP\Template\TwigFactory;
+
 use PurrPHP\Controller\AbstractController;
+use PurrPHP\Session\SessionInterface;
+use PurrPHP\Session\Session;
 
 use PurrPHP\Database\DatabaseFactory;
 use Doctrine\DBAL\Connection;
@@ -39,12 +42,16 @@ $container->add(Kernel::class)
   ->addArgument(RouterInterface::class)
   ->addArgument($container);
 
-// Init twig
-$container->addShared('twig-loader', FilesystemLoader::class)
-  ->addArgument(new StringArgument(VIEWS_PATH));
+// Init sessions
+$container->addShared(SessionInterface::class, Session::class);
 
-$container->addShared('twig', Environment::class)
-  ->addArgument('twig-loader');
+// Init twig
+$container->add('twig-factory', TwigFactory::class)
+  ->addArgument(SessionInterface::class);
+
+$container->addShared('twig', function() use ($container): Environment {
+  return $container->get('twig-factory')->create();
+});
 
 // Init abstact controller
 $container->inflector(AbstractController::class)

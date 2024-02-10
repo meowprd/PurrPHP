@@ -2,7 +2,8 @@
 // required in public/index.php
 
 // main settings
-define("DEBUG", TRUE); // required filp/whoops package
+define("DEBUG", TRUE); // required filp/whoops package + used for TWIG debug in TwigFactory
+define("APP_NAME", 'PurrPHP');
 
 // base dirs
 define("APP_PATH", dirname(__DIR__));
