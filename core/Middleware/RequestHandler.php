@@ -6,13 +6,15 @@ use League\Container\Container;
 use PurrPHP\Http\Request;
 use PurrPHP\Http\Response;
 
-use PurrPHP\Middleware\Handlers\RouterDispatch;
+use PurrPHP\Middleware\RouteMiddlewares;
 use PurrPHP\Middleware\Handlers\StartSession;
+use PurrPHP\Middleware\Handlers\RouterDispatch;
 
 class RequestHandler implements RequestHandlerInterface {
 
   private array $middleware = array(
     StartSession::class,
+    RouteMiddlewares::class,
     RouterDispatch::class
   );
 
@@ -27,5 +29,9 @@ class RequestHandler implements RequestHandlerInterface {
     $middleware = $this->container->get($middlewareClass);
     $response = $middleware->process($request, $this);
     return $response;
+  }
+
+  public function injectMiddleware(array $middleware): void {
+    array_splice($this->middleware, 0, 0, $middleware);
   }
 }

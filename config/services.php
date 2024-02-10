@@ -6,6 +6,7 @@ use PurrPHP\Routing\Router;
 
 use PurrPHP\Middleware\RequestHandlerInterface;
 use PurrPHP\Middleware\RequestHandler;
+use PurrPHP\Middleware\RouteMiddlewares;
 use PurrPHP\Middleware\Handlers\RouterDispatch;
 
 use PurrPHP\Http\Kernel;
@@ -42,8 +43,7 @@ $databaseConfig = require(CONFIG_PATH . '/database.php');
 /* ------------------------------ Init services ----------------------------- */
 // Init Router
 $container->add(RouterInterface::class, Router::class);
-$container->extend(RouterInterface::class)
-  ->addMethodCall('setRoutesPath', array(new StringArgument(ROUTES_PATH)));
+$container->extend(RouterInterface::class);
 
 // Init Middlewares
 $container->add(RequestHandlerInterface::class, RequestHandler::class)
@@ -52,6 +52,9 @@ $container->add(RequestHandlerInterface::class, RequestHandler::class)
 $container->add(RouterDispatch::class)
   ->addArgument(RouterInterface::class)
   ->addArgument($container);
+
+$container->add(RouteMiddlewares::class)
+  ->addArgument(new StringArgument(ROUTES_PATH));
 
 // Init Kernel
 $container->add(Kernel::class)

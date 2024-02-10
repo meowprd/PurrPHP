@@ -8,5 +8,4 @@ use PurrPHP\Http\Request;
 interface RouterInterface {
   
   public function dispatch(Request $request, Container $container): array;
-  public function setRoutesPath(string $path): void;
 }
