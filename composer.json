@@ -20,7 +20,8 @@
         "league/container": "^4.2.0",
         "twig/twig": "^3.8",
         "doctrine/dbal": "^4.0",
-        "rakit/validation": "^1.4"
+        "rakit/validation": "^1.4",
+        "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^7.0",
