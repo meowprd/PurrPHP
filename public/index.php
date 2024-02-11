@@ -12,7 +12,7 @@ $container = require(CONFIG_PATH . '/services.php');
 // register event listeners
 $listenersList = require(CONFIG_PATH . '/eventListeners.php');
 foreach($listenersList as $event => $listeners) {
-  foreach($listeners as $listener) {
+  foreach(array_unique($listeners) as $listener) {
     $container->get(EventDispatcher::class)->addListener($event, new $listener);
   }
 }
