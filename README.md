@@ -92,6 +92,8 @@ Into file `./config/routes.php` add new Route object
 ```php
 static function get(string $uri, array|callable $handler, array $middleware = array()): array; // Add new get route
 static function post(string $uri, array|callable $handler, array $middleware = array()): array; // Add new post route
+static function put(string $uri, array|callable $handler, array $middleware = array()): array; // Add new put route
+static function delete(string $uri, array|callable $handler, array $middleware = array()): array; // Add new delete route
 ```
 
 ### Example
